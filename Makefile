@@ -15,4 +15,14 @@ rebuild: rm_image build
 
 
 templates:
-	for version in $(VERSIONS); do regex=s!%%PHP_VERSION%%!$$version!g; mkdir -p $$version; cp php.ini $$version; sed $$regex Dockerfile.template > $$version/Dockerfile; done
+	{ \
+	for version in $(VERSIONS); \
+	do \
+		regex=s!%%PHP_VERSION%%!$$version!g\;s!%%IMAGE_VERSION%%!$(VERSION)!g; \
+		mkdir -p $$version; \
+		cp php.ini $$version; \
+		sed $$regex Dockerfile.template > $$version/Dockerfile; \
+		sed $$regex composer.template > bins/composer-$$version; \
+	done; \
+	}
+
