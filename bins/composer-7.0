@@ -1,3 +1,0 @@
-#!/bin/sh
-
-docker run --rm -it -w=/app -v $(pwd):/app -v ~/.ssh:/root/.ssh -v $HOME/.composer-docker:/composer jestefane/php-7.0-cli:1.0.0 composer $@
