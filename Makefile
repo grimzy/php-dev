@@ -33,10 +33,10 @@ templates: rm_templates
 		echo Building for PHP $$version; \
 		regex=s!%%PHP_VERSION%%!$$version!g\;s!%%IMAGE_VERSION%%!$(VERSION)!g; \
 		version_dir=$(BUILDS_DIR)/$$version; \
-		mkdir -p $$version_dir; \
-		sed $$regex template/Dockerfile.template > $$version_dir/Dockerfile; \
+		mkdir -p $$version_dir-cli; \
+		sed $$regex template/Dockerfile-cli.template > $$version_dir-cli/Dockerfile; \
+		cp template/php.ini $$version_dir-cli; \
 		echo ... Dockerfile; \
-		cp template/php.ini $$version_dir; \
 		mkdir -p $(BINS_DIR); \
 		sed $$regex template/php-cli.template > $(BINS_DIR)/php-cli-$$version; \
 		echo ... php-cli bin; \
