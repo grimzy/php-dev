@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker run --rm -it -w=/app -v $(pwd):/app -v ~/.ssh:/root/.ssh -v $HOME/.composer-docker:/composer jestefane/php-%%PHP_VERSION%%-cli:%%IMAGE_VERSION%% composer $@
+docker run --rm -it -w=/app -v $(pwd):/app -v ~/.ssh:/root/.ssh -v $HOME/.composer-docker:/composer jestefane/php-dev:%%PHP_VERSION%%-cli-%%IMAGE_VERSION%% composer $@
