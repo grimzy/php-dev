@@ -39,7 +39,7 @@ docker run --rm -it \
     -w=/app \
     -v /path/to/project:/app \
     -v ~/.ssh:/root/.ssh \
-    -v $HOME/.composer-docker:/composer \
+    -v $HOME/.composer-docker:/root/.composer \
     jestefane/php-dev:7.0-cli-1.0.0 composer
 ```
 
@@ -50,7 +50,7 @@ docker run --rm -it \
     -w=/app \
     -v $(pwd):/app \
     -v ~/.ssh:/root/.ssh \
-    -v $HOME/.composer-docker:/composer \
+    -v $HOME/.composer-docker:/root/.composer \
     jestefane/php-dev:7.0-cli-1.0.0 composer install
 ```
 
