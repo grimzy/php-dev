@@ -1,5 +1,5 @@
 VERSION=1.0.0
-VERSIONS=5.5 5.6 7.0 7.1
+VERSIONS=5.5 5.6 7.0 7.1 7.2
 GENERATED_DIR=generated
 BUILDS_DIR=$(GENERATED_DIR)/builds
 BINS_DIR=$(GENERATED_DIR)/bins
@@ -11,7 +11,7 @@ builds: templates
 	do \
 		cli=jestefane/php-dev:$$version-cli-$(VERSION); \
 		echo Building $$cli; \
-		docker build -t $$cli $(BUILDS_DIR)/$$version; \
+		docker build -t $$cli $(BUILDS_DIR)/$$version-cli; \
 	done; \
 	}
 
@@ -53,3 +53,10 @@ cp_bins:
 	@chmod +x $(BINS_DIR)/*
 	@cp $(BINS_DIR)/* $(BIN_DIR)
 	@echo Copied bins into $(BIN_DIR)
+
+symlink_bins:
+	@chmod +x $(BINS_DIR)/*
+	@cd $(BINS_DIR)
+	@$(eval DIR := ${CURDIR}/$(BINS_DIR))
+	@ln -s $(DIR)/* $(BIN_DIR)
+	@echo Symlink bins from $(DIR) into $(BIN_DIR)

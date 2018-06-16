@@ -59,11 +59,37 @@ docker run --rm -it \
 For simplicity , and to be able to use the tools normally, this repository contains binaries you can copy in `/usr/local/bin` (or anythwere in your `$PATH`).
 
 ```shell
-make cp_bins
+make symlink_bins   # adds symlinks in /usr/local/bin
+```
+
+Or if you prefer:
+
+```shell
+make cp_bins        # copies the bins into /usr/local/bin
 ```
 
 ## Building images locally
 
 ```shell
 make builds
+```
+
+## Rebuilding templates
+
+```shell
+make templates
+```
+
+## Adding a new PHP version
+
+In Makefile, add the new version to `VERSIONS`. Then run
+
+```shell
+make builds
+```
+
+or run:
+
+```shell
+make builds VERSIONS=7.2
 ```
