@@ -8,6 +8,7 @@ Super simple Docker images for PHP development.
 - 5.6-cli
 - 7.0-cli
 - 7.1-cli
+- 7.2-cli
 
 **PHP modules installed:**
 
