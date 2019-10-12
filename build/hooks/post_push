@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+for php_version in $PHP_VERSIONS; do
+  for php_variant in $PHP_VARIANTS; do
+    image_name=jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH
+    echo Pushing tag: "$image_name"
+    docker push "$image_name"
+  done
+done

@@ -6,8 +6,8 @@ for php_version in $PHP_VERSIONS; do
     xdebug_version=-2.5.5
   fi;
   for php_variant in $PHP_VARIANTS; do
-    image_name=jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH;
-    echo Building image: "$image_name";
+    image_name=jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH
+    echo Building image: "$image_name"
     docker build \
       -t "$image_name" \
       --build-arg BUILD_PHP_VERSION="$php_version" \
