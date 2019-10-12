@@ -2,19 +2,34 @@
 
 Super simple Docker images for PHP development.
 
-**Versions**
+**PHP Versions: ** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
 
-- 5.5-cli
-- 5.6-cli
-- 7.0-cli
-- 7.1-cli
-- 7.2-cli
+**PHP Variants:** `cli`
 
-**PHP modules installed:**
+**Also installed:**
 
-XDebug
+- Composer
+- PHP modules `XDebug`, `PDO MySQL`
 
-PDO MySQL
+
+
+## Pull the Image
+
+**Pull the latest version:**
+
+```sh
+$ docker pull jestefane/php-dev
+```
+
+**Pull a specific version:**
+
+```sh
+$ docker pull jestefane/php-dev:7.2-cli-1.1.0
+```
+
+> The image name target has the following format:
+>
+> `<docker repo>:<php version>-<php variant>-<github repo version>`
 
 ## Usage
 
@@ -24,13 +39,13 @@ PDO MySQL
 docker run --rm -it
     -w=/app \
     -v /path/to/project:/app \
-    jestefane/php-dev:7.0-cli-1.0.0
+    jestefane/php-dev:7.2-cli-110.0
 ```
 
 For example:
 
 ```shell
-docker run --rm -it -w=/app -v $(pwd):/app jestefane/php-dev:7.0-cli-1.0.0 hello-world.php
+docker run --rm -it -w=/app -v $(pwd):/app jestefane/php-dev:7.2-cli-1.1.0 hello-world.php
 ```
 
 ### Composer
@@ -41,7 +56,7 @@ docker run --rm -it \
     -v /path/to/project:/app \
     -v ~/.ssh:/root/.ssh \
     -v $HOME/.composer-docker:/root/.composer \
-    jestefane/php-dev:7.0-cli-1.0.0 composer
+    jestefane/php-dev:7.2-cli-1.1.0 composer
 ```
 
 For example:
@@ -49,36 +64,34 @@ For example:
 ```shell
 docker run --rm -it \
     -w=/app \
-    -v $(pwd):/app \
+    -v "$(pwd)":/app \
     -v ~/.ssh:/root/.ssh \
-    -v $HOME/.composer-docker:/root/.composer \
-    jestefane/php-dev:7.0-cli-1.0.0 composer install
+    -v "$HOME/.composer-docker":/root/.composer \
+    jestefane/php-dev:7.2-cli-1.1.0 composer install
 ```
 
-## Binaries
+## Scripts
 
-For simplicity , and to be able to use the tools normally, this repository contains binaries you can copy in `/usr/local/bin` (or anythwere in your `$PATH`).
+So you don't have to type the full docker run commands, you can generate shell scripts that alias th
 
 ```shell
-make symlink_bins   # adds symlinks in /usr/local/bin
+make install_scripts   # adds symlinks in /usr/local/bin
 ```
 
-Or if you prefer:
+> The default is to create symlinks of the scripts inside `/usr/local/bin`. If you'd like to override that, run `make install_scripts BIN_DIR=/dir/of/your/choice`
+
+## Building Images Locally
 
 ```shell
-make cp_bins        # copies the bins into /usr/local/bin
+$ make build
 ```
 
-## Building images locally
+
+
+## Rebuilding Scripts from Templates
 
 ```shell
-make builds
-```
-
-## Rebuilding templates
-
-```shell
-make templates
+make scripts
 ```
 
 ## Adding a new PHP version

@@ -12,6 +12,6 @@ for php_version in $PHP_VERSIONS; do
       -t "$image_name" \
       --build-arg BUILD_PHP_VERSION="$php_version" \
       --build-arg BUILD_PHP_VARIANT="$php_variant" \
-      --build-arg BUILD_XDEBUG_VERSION="$xdebug_version" build
+      --build-arg BUILD_XDEBUG_VERSION="$xdebug_version" .
   done
 done
