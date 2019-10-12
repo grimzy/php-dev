@@ -8,7 +8,6 @@ PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
 PHP_VARIANTS=cli
 
 BIN_DIR=/usr/local/bin
-
 SCRIPTS_DIR=scripts
 
 .PHONY: build
@@ -47,12 +46,12 @@ rm_build:
 rebuild: rm_build build
 
 .PHONY: scripts
-scripts: rm_scripts
+scripts: rm_scripts_dir
 	@{ \
 	for php_version in $(PHP_VERSIONS); do \
 		echo "Generating scripts for PHP VERSION: $$php_version"; \
 		for php_variant in $(PHP_VARIANTS); do \
-			regex=s!%%PHP_VERSION%%!$$php_version!g\;s!%%SOURCE_BRANCH%%!$(SOURCE_BRANCH)!g; \
+			regex=s!%%PHP_VERSION%%!$$php_version!g\;s!%%PHP_VARIANT%%!$$php_variant!g\;s!%%SOURCE_BRANCH%%!$(SOURCE_BRANCH)!g; \
 			mkdir -p $(SCRIPTS_DIR); \
 			echo ">>> Script: PHP $$php_version-$$php_variant"; \
 			sed $$regex template/php-cli.template > $(SCRIPTS_DIR)/php-$$php_version-$$php_variant; \
@@ -62,21 +61,21 @@ scripts: rm_scripts
 	done; \
 	}
 
-.PHONY: rm_scripts
-rm_scripts:
+.PHONY: rm_scripts_dir
+rm_scripts_dir:
 	@echo Deleting previously generated scripts directory
 	@rm -Rf $(SCRIPTS_DIR)
 
-.PHONY: install_scripts
-install_scripts:
+.PHONY: shortcuts
+shortcuts: scripts
 	@chmod +x $(SCRIPTS_DIR)/*
 	@cd $(SCRIPTS_DIR)
 	@$(eval DIR := ${CURDIR}/$(SCRIPTS_DIR))
 	@ln -s $(DIR)/* $(BIN_DIR) || true
 	@echo Symlink scripts from $(DIR) into $(BIN_DIR)
 
-.PHONY: uninstall_scripts
-uninstall_scripts:
+.PHONY: rm_shortcuts
+rm_shortcuts:
 	@{ \
 	for php_version in $(PHP_VERSIONS); do \
 		echo "Uninstalling scripts from $(BIN_DIR) for PHP VERSION $$php_version"; \
@@ -95,3 +94,5 @@ rm_dangling:
 	@docker volume ls -qf dangling=true | xargs docker volume rm
 	@echo Removing dangling images
 	@docker images -qf dangling=true | xargs docker rmi
+
+#TODO: aliasing shortcuts to get the defaults php php-fpm and composer
