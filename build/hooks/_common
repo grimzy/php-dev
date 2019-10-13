@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [ -n "${DOCKER_TAG}" ]; then
+  echo "DOCKER_TAG: ${DOCKER_TAG}"
+
+  php_version="${DOCKER_TAG%%-*}"
+  if [[ "${PHP_VERSIONS}" == *"$php_version"* ]]; then
+    PHP_VERSIONS="$php_version"
+    echo ">>> Set PHP_VERSIONS to: $PHP_VERSIONS"
+  fi
+
+  php_variant="${DOCKER_TAG#*-}"
+  php_variant=${php_variant%%-*}
+  if [[ "${PHP_VARIANTS}" == *"$php_variant"* ]]; then
+    PHP_VARIANTS="$php_variant"
+    echo ">>> Set PHP_VARIANTS to: $PHP_VARIANTS"
+  fi
+fi

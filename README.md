@@ -4,7 +4,7 @@
 
 >  Super simple Docker images for PHP development.
 
-**PHP Versions: ** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
+**PHP Versions:** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
 
 **PHP Variants:** `cli`
 
@@ -222,6 +222,7 @@ $ make rm_dangling
 ## License
 
 [MIT][license] © Joseph Estefane
+
 
 [docker-cloud-automated]: https://img.shields.io/docker/cloud/automated/jestefane/php-dev "Docker Cloud Automated build"
 [docker-cloud-build]: https://img.shields.io/docker/cloud/build/jestefane/php-dev "Docker Cloud Build Status"
