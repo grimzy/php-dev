@@ -221,7 +221,7 @@ $ make rm_dangling
 
 ## License
 
-[MIT](https://github.com/grimzy/lass/blob/master/LICENSE) © Joseph Estefane
+[MIT][license] © Joseph Estefane
 
 [docker-cloud-automated]: https://img.shields.io/docker/cloud/automated/jestefane/php-dev "Docker Cloud Automated build"
 [docker-cloud-build]: https://img.shields.io/docker/cloud/build/jestefane/php-dev "Docker Cloud Build Status"
@@ -242,3 +242,4 @@ $ make rm_dangling
 [templates]: #script-templates	"Script Templates"
 [shortcuts-make]: #create-the-shortcuts	"Create the Shortcuts"
 [scripts-make]: #generate-the-scripts	"Generate the Scripts"
+[license]: ./LICENSE "MIT License"
