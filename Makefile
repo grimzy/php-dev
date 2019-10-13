@@ -1,62 +1,98 @@
-VERSION=1.0.1
-VERSIONS=5.5 5.6 7.0 7.1 7.2
-GENERATED_DIR=generated
-BUILDS_DIR=$(GENERATED_DIR)/builds
-BINS_DIR=$(GENERATED_DIR)/bins
+# SOURCE_BRANCH
+SOURCE_BRANCH=1.1.0
+
+# Possible versions: 5.5 5.6 7.0 7.1 7.2
+PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
+
+# Possible VARIANT: cli, fpm, apache, alpine
+PHP_VARIANTS=cli
+
 BIN_DIR=/usr/local/bin
+SCRIPTS_DIR=scripts
 
-builds: templates
+.PHONY: build
+build:
 	@{ \
-	for version in $(VERSIONS); \
-	do \
-		cli=jestefane/php-dev:$$version-cli-$(VERSION); \
-		echo Building $$cli; \
-		docker build -t $$cli $(BUILDS_DIR)/$$version-cli; \
+	for php_version in $(PHP_VERSIONS); do \
+		xdebug_version=; \
+		if [ $$php_version == "5.5" ] || [ $$php_version == "5.6" ]; then \
+			xdebug_version=-2.5.5; \
+		fi; \
+		for php_variant in $(PHP_VARIANTS); do \
+			image_name=jestefane/php-dev:$$php_version-$$php_variant-$(SOURCE_BRANCH); \
+			echo Building image: $$image_name; \
+			docker build \
+				-t $$image_name \
+				--build-arg BUILD_PHP_VERSION=$$php_version \
+			 	--build-arg BUILD_PHP_VARIANT=$$php_variant \
+			 	--build-arg BUILD_XDEBUG_VERSION=$$xdebug_version build; \
+		done; \
 	done; \
 	}
 
-rm_images:
+.PHONY: rm_build
+rm_build:
 	@{ \
-	for version in $(VERSIONS); \
-	do \
-		cli=jestefane/php-dev:$$version-cli-$(VERSION); \
-		docker rmi $$cli || true; \
+	for php_version in $(PHP_VERSIONS); do \
+		for php_variant in $(PHP_VARIANTS); do \
+			image_name=jestefane/php-dev:$$php_version-$$php_variant-$(SOURCE_BRANCH); \
+			echo Removing image: $$image_name; \
+			docker rmi $$image_name || true; \
+		done; \
 	done; \
 	}
 
-rebuild: rm_images builds
+.PHONY: rebuild
+rebuild: rm_build build
 
-templates: rm_templates
+.PHONY: scripts
+scripts: rm_scripts_dir
 	@{ \
-	for version in $(VERSIONS); \
-	do \
-		echo Building for PHP $$version; \
-		regex=s!%%PHP_VERSION%%!$$version!g\;s!%%IMAGE_VERSION%%!$(VERSION)!g; \
-		version_dir=$(BUILDS_DIR)/$$version; \
-		mkdir -p $$version_dir-cli; \
-		sed $$regex template/Dockerfile-cli.template > $$version_dir-cli/Dockerfile; \
-		cp template/php.ini $$version_dir-cli; \
-		echo ... Dockerfile; \
-		mkdir -p $(BINS_DIR); \
-		sed $$regex template/php-cli.template > $(BINS_DIR)/php-cli-$$version; \
-		echo ... php-cli bin; \
-		sed $$regex template/composer.template > $(BINS_DIR)/composer-$$version; \
-		echo ... composer bin; \
+	for php_version in $(PHP_VERSIONS); do \
+		echo "Generating scripts for PHP VERSION: $$php_version"; \
+		for php_variant in $(PHP_VARIANTS); do \
+			regex=s!%%PHP_VERSION%%!$$php_version!g\;s!%%PHP_VARIANT%%!$$php_variant!g\;s!%%SOURCE_BRANCH%%!$(SOURCE_BRANCH)!g; \
+			mkdir -p $(SCRIPTS_DIR); \
+			echo ">>> Script: PHP $$php_version-$$php_variant"; \
+			sed $$regex template/php-cli.template > $(SCRIPTS_DIR)/php-$$php_version-$$php_variant; \
+		done; \
+		echo ">>> Script Composer $$php_version"; \
+		sed $$regex template/composer.template > $(SCRIPTS_DIR)/composer-$$php_version; \
 	done; \
 	}
 
-rm_templates:
-	@echo Deleting generated templates
-	@rm -Rf $(GENERATED_DIR)
+.PHONY: rm_scripts_dir
+rm_scripts_dir:
+	@echo Deleting previously generated scripts directory
+	@rm -Rf $(SCRIPTS_DIR)
 
-cp_bins:
-	@chmod +x $(BINS_DIR)/*
-	@cp $(BINS_DIR)/* $(BIN_DIR)
-	@echo Copied bins into $(BIN_DIR)
+.PHONY: shortcuts
+shortcuts: scripts
+	@chmod +x $(SCRIPTS_DIR)/*
+	@cd $(SCRIPTS_DIR)
+	@$(eval DIR := ${CURDIR}/$(SCRIPTS_DIR))
+	@ln -s $(DIR)/* $(BIN_DIR) || true
+	@echo Symlink scripts from $(DIR) into $(BIN_DIR)
 
-symlink_bins:
-	@chmod +x $(BINS_DIR)/*
-	@cd $(BINS_DIR)
-	@$(eval DIR := ${CURDIR}/$(BINS_DIR))
-	@ln -s $(DIR)/* $(BIN_DIR)
-	@echo Symlink bins from $(DIR) into $(BIN_DIR)
+.PHONY: rm_shortcuts
+rm_shortcuts:
+	@{ \
+	for php_version in $(PHP_VERSIONS); do \
+		echo "Uninstalling scripts from $(BIN_DIR) for PHP VERSION $$php_version"; \
+		for php_variant in $(PHP_VARIANTS); do \
+			echo ">>> Uninstalled script: PHP $$php_version-$$php_variant"; \
+			rm $(BIN_DIR)/php-$$php_version-$$php_variant || true; \
+		done; \
+		echo ">>> Uninstalled script: Composer $$php_version from $(BIN_DIR)"; \
+		rm $(BIN_DIR)/composer-$$php_version || true; \
+	done; \
+	}
+
+.PHONY: rm_dangling
+rm_dangling:
+	@echo Removing dangling volumes
+	@docker volume ls -qf dangling=true | xargs docker volume rm
+	@echo Removing dangling images
+	@docker images -qf dangling=true | xargs docker rmi
+
+#TODO: aliasing shortcuts to get the defaults php php-fpm and composer

@@ -1,13 +1,24 @@
-FROM php:7.0-cli
+# Possible versions: 5.5, 5.6, 7.0, 7.1, 7.2
+ARG BUILD_PHP_VERSION=7.2
+# Possible VARIANT: cli, fpm, apache, alpine
+ARG BUILD_PHP_VARIANT=cli
 
-RUN apt-get update && apt-get install -y unzip git
+FROM php:$BUILD_PHP_VERSION-$BUILD_PHP_VARIANT
 
+# Copy PHP config
 COPY php.ini /usr/local/etc/php/
 
+ARG BUILD_XDEBUG_VERSION
+
+# Install dependencies
 # Install and enable xdebug and pdo mysql
-RUN pecl install xdebug \
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    && pecl install xdebug$BUILD_XDEBUG_VERSION \
     && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-enable xdebug pdo_mysql
+    && docker-php-ext-enable xdebug pdo_mysql \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-docker run --rm -it -w=/app -v $(pwd):/app jestefane/php-dev:7.0-cli-1.0.1 $@
