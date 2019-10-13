@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -v DOCKER_TAG ]]; then
-  if [[ "5.5 5.6 7.0 7.1 7.2" == *"$DOCKER_TAG"* ]]; then
-    PHP_VERSIONS=$DOCKER_TAG
-  fi
-fi
-
 for php_version in $PHP_VERSIONS; do
   for php_variant in $PHP_VARIANTS; do
     image_name=jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH
