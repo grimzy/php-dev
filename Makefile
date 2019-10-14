@@ -1,5 +1,5 @@
 # SOURCE_BRANCH
-SOURCE_BRANCH=1.1.0
+SOURCE_BRANCH=1.1.1
 
 # DOCKER_REPO and DOCKER_TAG:
 # https://docs.docker.com/docker-hub/builds/advanced/#custom-build-phase-hooks
@@ -97,5 +97,3 @@ rm_dangling:
 	@docker volume ls -qf dangling=true | xargs docker volume rm
 	@echo Removing dangling images
 	@docker images -qf dangling=true | xargs docker rmi
-
-#TODO: aliasing shortcuts to get the defaults php php-fpm and composer
