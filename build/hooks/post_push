@@ -13,10 +13,4 @@ for php_version in $PHP_VERSIONS; do
   done
 done
 
-tag=${DOCKER_TAG##*-}
-if [ "$PHP_VERSIONS" == "7.2" ] && [ "$PHP_VARIANTS" == "cli" ] && [ "$tag" == "latest" ]; then
-  docker tag "$DOCKER_REPO:$PHP_VERSIONS-$PHP_VARIANTS-$SOURCE_BRANCH" "$DOCKER_REPO:$tag"
-  docker push "$DOCKER_REPO:$tag"
-fi
-
 exit 0
