@@ -1,7 +1,9 @@
 # SOURCE_BRANCH
 SOURCE_BRANCH=1.1.0
 
-# DOCKER_TAG
+# DOCKER_REPO and DOCKER_TAG:
+# https://docs.docker.com/docker-hub/builds/advanced/#custom-build-phase-hooks
+DOCKER_REPO=jestefane/php-dev
 DOCKER_TAG=
 
 # Possible versions: 5.5 5.6 7.0 7.1 7.2
@@ -18,6 +20,7 @@ build:
 	@PHP_VERSIONS="$(PHP_VERSIONS)" \
 	PHP_VARIANTS="$(PHP_VARIANTS)" \
 	SOURCE_BRANCH="$(SOURCE_BRANCH)" \
+	DOCKER_REPO="$(DOCKER_REPO)" \
 	DOCKER_TAG="$(DOCKER_TAG)" \
 	./build/hooks/build
 
@@ -26,6 +29,7 @@ post_push:
 	@PHP_VERSIONS="$(PHP_VERSIONS)" \
 	PHP_VARIANTS="$(PHP_VARIANTS)" \
 	SOURCE_BRANCH="$(SOURCE_BRANCH)" \
+	DOCKER_REPO="$(DOCKER_REPO)" \
 	DOCKER_TAG="$(DOCKER_TAG)" \
 	./build/hooks/post_push
 
@@ -34,7 +38,7 @@ rm_build:
 	@{ \
 	for php_version in $(PHP_VERSIONS); do \
 		for php_variant in $(PHP_VARIANTS); do \
-			image_name=jestefane/php-dev:$$php_version-$$php_variant-$(SOURCE_BRANCH); \
+			image_name=$(DOCKER_REPO):$$php_version-$$php_variant-$(SOURCE_BRANCH); \
 			echo Removing image: $$image_name; \
 			docker rmi $$image_name || true; \
 		done; \
@@ -53,7 +57,7 @@ scripts: rm_scripts_dir
 			regex=s!%%PHP_VERSION%%!$$php_version!g\;s!%%PHP_VARIANT%%!$$php_variant!g\;s!%%SOURCE_BRANCH%%!$(SOURCE_BRANCH)!g; \
 			mkdir -p $(SCRIPTS_DIR); \
 			echo ">>> Script: PHP $$php_version-$$php_variant"; \
-			sed $$regex template/php-cli.template > $(SCRIPTS_DIR)/php-$$php_version-$$php_variant; \
+			sed $$regex template/php.template > $(SCRIPTS_DIR)/php-$$php_version-$$php_variant; \
 		done; \
 		echo ">>> Script Composer $$php_version"; \
 		sed $$regex template/composer.template > $(SCRIPTS_DIR)/composer-$$php_version; \
