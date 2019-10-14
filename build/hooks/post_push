@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# shellcheck source=./_common
+. "$DIR/_common"
+
 for php_version in $PHP_VERSIONS; do
   for php_variant in $PHP_VARIANTS; do
-    image_name=jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH
+    image_name="jestefane/php-dev:$php_version-$php_variant-$SOURCE_BRANCH"
     echo Pushing tag: "$image_name"
     docker push "$image_name"
   done
 done
+
+exit 0

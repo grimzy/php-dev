@@ -8,7 +8,13 @@ This project adheres to [Semantic Versioning][semver].
 
 Refer to master branch
 
-## \[v1.1.0\] - 2019-10-12
+## \[v1.1.1\] - 2019-10-13
+
+### Split PHP builds:
+- Split builds by PHP version and variant
+- Use builds Docker hooks in Makefile
+
+## \[v1.1.0\] - 2019-10-13
 
 ### Build Images with --build-args:
 - Using Docker Cloud `build` hook to pass `--build-args` to our `docker build` command during Automated Builds
@@ -34,4 +40,3 @@ Refer to master branch
 - Initial working Docker build
 
 [semver]: https://semver.org/spec/v2.0.0.html "Semantic Versioning 2.0.0"
-

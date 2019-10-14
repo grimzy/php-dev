@@ -4,7 +4,7 @@
 
 >  Super simple Docker images for PHP development.
 
-**PHP Versions: ** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
+**PHP Versions:** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
 
 **PHP Variants:** `cli`
 
@@ -223,6 +223,7 @@ $ make rm_dangling
 
 [MIT][license] © Joseph Estefane
 
+
 [docker-cloud-automated]: https://img.shields.io/docker/cloud/automated/jestefane/php-dev "Docker Cloud Automated build"
 [docker-cloud-build]: https://img.shields.io/docker/cloud/build/jestefane/php-dev "Docker Cloud Build Status"
 [docker-pulls]: https://img.shields.io/docker/pulls/jestefane/php-dev "Docker Pulls"
@@ -238,8 +239,8 @@ $ make rm_dangling
 [php-cli-template]: template/php-cli.template "PHP CLI Template"
 [composer]: https://getcomposer.org/ "Composer"
 [composer-template]: template/composer.template "Composer Template"
-[composer-ref]: #composer	""PHP Composer Scripts""
-[templates]: #script-templates	"Script Templates"
+[composer-ref]: #composer "PHP Composer Scripts"
+[templates]: #script-templates "Script Templates"
 [shortcuts-make]: #create-the-shortcuts	"Create the Shortcuts"
-[scripts-make]: #generate-the-scripts	"Generate the Scripts"
+[scripts-make]: #generate-the-scripts "Generate the Scripts"
 [license]: ./LICENSE "MIT License"

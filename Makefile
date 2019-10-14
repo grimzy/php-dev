@@ -1,6 +1,9 @@
 # SOURCE_BRANCH
 SOURCE_BRANCH=1.1.0
 
+# DOCKER_TAG
+DOCKER_TAG=
+
 # Possible versions: 5.5 5.6 7.0 7.1 7.2
 PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
 
@@ -12,23 +15,19 @@ SCRIPTS_DIR=scripts
 
 .PHONY: build
 build:
-	@{ \
-	for php_version in $(PHP_VERSIONS); do \
-		xdebug_version=; \
-		if [ $$php_version == "5.5" ] || [ $$php_version == "5.6" ]; then \
-			xdebug_version=-2.5.5; \
-		fi; \
-		for php_variant in $(PHP_VARIANTS); do \
-			image_name=jestefane/php-dev:$$php_version-$$php_variant-$(SOURCE_BRANCH); \
-			echo Building image: $$image_name; \
-			docker build \
-				-t $$image_name \
-				--build-arg BUILD_PHP_VERSION=$$php_version \
-			 	--build-arg BUILD_PHP_VARIANT=$$php_variant \
-			 	--build-arg BUILD_XDEBUG_VERSION=$$xdebug_version build; \
-		done; \
-	done; \
-	}
+	@PHP_VERSIONS="$(PHP_VERSIONS)" \
+	PHP_VARIANTS="$(PHP_VARIANTS)" \
+	SOURCE_BRANCH="$(SOURCE_BRANCH)" \
+	DOCKER_TAG="$(DOCKER_TAG)" \
+	./build/hooks/build
+
+.PHONY: post_push
+post_push:
+	@PHP_VERSIONS="$(PHP_VERSIONS)" \
+	PHP_VARIANTS="$(PHP_VARIANTS)" \
+	SOURCE_BRANCH="$(SOURCE_BRANCH)" \
+	DOCKER_TAG="$(DOCKER_TAG)" \
+	./build/hooks/post_push
 
 .PHONY: rm_build
 rm_build:
