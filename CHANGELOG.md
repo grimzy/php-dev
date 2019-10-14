@@ -10,9 +10,11 @@ Refer to master branch
 
 ## \[v1.1.1\] - 2019-10-13
 
-### Split PHP builds:
+### Split PHP builds, PHP FPM:
 - Split builds by PHP version and variant
 - Use builds Docker hooks in Makefile
+- Added `fpm` variant
+- Now using `DOCKER_REPO` and `DOCKER_TAG` build variables
 
 ## \[v1.1.0\] - 2019-10-13
 
