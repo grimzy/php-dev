@@ -10,7 +10,7 @@ DOCKER_TAG=
 PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
 
 # Possible VARIANT: cli, fpm, apache, alpine
-PHP_VARIANTS=cli
+PHP_VARIANTS=cli fpm
 
 BIN_DIR=/usr/local/bin
 SCRIPTS_DIR=scripts
