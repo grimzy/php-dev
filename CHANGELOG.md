@@ -15,6 +15,7 @@ Refer to master branch
 - Use builds Docker hooks in Makefile
 - Added `fpm` variant
 - Now using `DOCKER_REPO` and `DOCKER_TAG` build variables
+- Push `latest` (PHP CLI 7.2) tag when building master
 
 ## \[v1.1.0\] - 2019-10-13
 
