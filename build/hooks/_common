@@ -10,7 +10,9 @@ if [ -n "${DOCKER_TAG}" ]; then
   fi
 
   php_variant="${DOCKER_TAG#*-}"
+  echo "Step 1: $php_variant"
   php_variant=${php_variant%%-*}
+  echo "Step 2: $php_variant"
   if [[ "${PHP_VARIANTS}" == *"$php_variant"* ]]; then
     PHP_VARIANTS="$php_variant"
     echo ">>> Set PHP_VARIANTS to: $PHP_VARIANTS"
