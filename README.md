@@ -166,15 +166,15 @@ Script template: [template/composer.template][composer-template]
 
 ### Variables
 
-| Variable name   | Description                                                  | Default value                         | Possible values                                              |
-| --------------- | ------------------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------ |
-| `SOURCE_BRANCH` | Appended to the image name                                   | Repository's current version: `1.1.1` | Any `string` value                                           |
-| `DOCKER_REPO`   | The Dockerhub repository to perform the tasks against        | `jestefane/php-dev`                   | A Dockerhub repository                                       |
-| `DOCKER_TAG`    | A combinaison of one PHP version and one PHP variant to perform a task only one image (for example `7.1-cli`) | Empty                                 | Any `PHP_VERSION`-`PHP_VARIANT` combinaison                  |
-| `PHP_VERSIONS`  | Space separated list of PHP versions to perform a task on    | `5.5 5.6 7.0 7.1 7.2`                 | Any combination from `5.5`, `5.6`, `7.0`, `7.1`, `7.2`       |
-| `PHP_VARIANTS`  | Space separated list of Docker build variants to perform a task on | `cli fpm`                             | `cli`, `fpm`                                                 |
-| `BIN_DIR`       | Directory in your `PATH` where you would like to symlink the scripts | `/usr/local/bin`                      | Any path on your system. Preferaby one already in your `PATH` |
-| `SCRIPTS_DIR`   | Directory where the scripts are generated (or removed). Relative to the repository's root | `scripts`                             | Any path on your system                                      |
+| Variable name   | Description                                                  | Default value                                         | Possible values                                              |
+| --------------- | ------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------ |
+| `SOURCE_BRANCH` | Appended to the image name.<br />[Docker Cloud variable][docker-cloud-variable] | Current Git branch: `git rev-parse --abbrev-ref HEAD` | Any `string` value                                           |
+| `DOCKER_REPO`   | The Dockerhub repository to perform the tasks against<br />[Docker Cloud variable][docker-cloud-variable] | `jestefane/php-dev`                                   | A Dockerhub repository                                       |
+| `DOCKER_TAG`    | A combinaison of one PHP version and one PHP variant to perform a task only one image (for example `7.1-cli`)<br />[Docker Cloud variable][docker-cloud-variable] | Empty                                                 | Any `PHP_VERSION`-`PHP_VARIANT` combinaison                  |
+| `PHP_VERSIONS`  | Space separated list of PHP versions to perform a task on.   | `5.5 5.6 7.0 7.1 7.2`                                 | Any combination from `5.5`, `5.6`, `7.0`, `7.1`, `7.2`       |
+| `PHP_VARIANTS`  | Space separated list of Docker build variants to perform a task on | `cli fpm`                                             | `cli`, `fpm`                                                 |
+| `BIN_DIR`       | Directory in your `PATH` where you would like to symlink the scripts | `/usr/local/bin`                                      | Any path on your system. Preferaby one already in your `PATH` |
+| `SCRIPTS_DIR`   | Directory where the scripts are generated (or removed). Relative to the repository's root | `scripts`                                             | Any path on your system                                      |
 
 > **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you use `\`:
 >
@@ -304,4 +304,5 @@ $ make rm_dangling
 [templates]: #script-templates "Script Templates"
 [shortcuts-make]: #create-the-shortcuts	"Create the Shortcuts"
 [scripts-make]: #generate-the-scripts "Generate the Scripts"
+[docker-cloud-variable]: https://docs.docker.com/docker-hub/builds/advanced/#environment-variables-for-building-and-testing "Environment Variables for Building and Testing"
 [license]: ./LICENSE "MIT License File"
