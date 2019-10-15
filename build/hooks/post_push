@@ -25,14 +25,15 @@ for php_version in $PHP_VERSIONS; do
       short_tag="$DOCKER_REPO:$php_version-$php_variant"
       echo Pushing short tag: "$short_tag"
       docker tag "$IMAGE_NAME" "$short_tag"
+      docker push "$short_tag"
 
       # Is this the latest PHP version/variant?
       if [ "$php_version" == "7.2" ] && [ "$php_variant" == "cli" ]; then
         latest_tag="$DOCKER_REPO:latest"
         echo Pushing latest tag: "$latest_tag"
         docker tag "$IMAGE_NAME" "$latest_tag"
+        docker push "$latest_tag"
       fi
-      docker push "$latest_tag"
     fi
   done
 done

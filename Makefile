@@ -1,4 +1,3 @@
-
 # https://docs.docker.com/docker-hub/builds/advanced/#environment-variables-for-building-and-testing
 SOURCE_BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
 DOCKER_REPO=jestefane/php-dev
