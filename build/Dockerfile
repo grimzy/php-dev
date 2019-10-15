@@ -1,6 +1,5 @@
-# Possible versions: 5.5, 5.6, 7.0, 7.1, 7.2
+# PHP version and variant to build (defaults are latest)
 ARG BUILD_PHP_VERSION=7.2
-# Possible VARIANT: cli, fpm, apache, alpine
 ARG BUILD_PHP_VARIANT=cli
 
 FROM php:$BUILD_PHP_VERSION-$BUILD_PHP_VARIANT
