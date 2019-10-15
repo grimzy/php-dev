@@ -15,6 +15,8 @@ Refer to master branch
 - Use builds Docker hooks in Makefile
 - Added `fpm` variant
 - Now using `DOCKER_REPO` and `DOCKER_TAG` build variables
+- Push `latest` tags when building latest version (checks for Semantic Version in $SOURCE_BRANCH)
+- Set latest PHP version to  7.2 and variant to CLI
 
 ## \[v1.1.0\] - 2019-10-13
 
