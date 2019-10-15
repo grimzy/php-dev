@@ -1,16 +1,46 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "************************************************"
+echo "*             Start post_push hook             *"
+echo "************************************************"
+echo
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # shellcheck source=./_common
 . "$DIR/_common"
 
+SEMVER_REGEX="^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+
 for php_version in $PHP_VERSIONS; do
   for php_variant in $PHP_VARIANTS; do
-    image_name="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
-    echo Pushing tag: "$image_name"
-    docker push "$image_name"
+    if [ -z "$HAS_IMAGE_NAME" ] || [ -z "$IMAGE_NAME" ]; then
+      IMAGE_NAME="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
+      echo ">>> Set IMAGE_NAME to: $IMAGE_NAME"
+    fi
+
+    # Is this a release?
+    if [[ $SOURCE_BRANCH =~ $SEMVER_REGEX ]]; then
+      # Set the short tags
+      short_tag="$DOCKER_REPO:$php_version-$php_variant"
+      echo Pushing short tag: "$short_tag"
+      docker tag "$IMAGE_NAME" "$short_tag"
+
+      # Is this the latest PHP version/variant?
+      if [ "$php_version" == "7.2" ] && [ "$php_variant" == "cli" ]; then
+        latest_tag="$DOCKER_REPO:latest"
+        echo Pushing latest tag: "$latest_tag"
+        docker tag "$IMAGE_NAME" "$latest_tag"
+      fi
+      docker push "$latest_tag"
+    fi
   done
 done
+
+echo
+echo "************************************************"
+echo "*              End post_push hook              *"
+echo "************************************************"
+echo
 
 exit 0

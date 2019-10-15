@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "************************************************"
+echo "*               Start build hook               *"
+echo "************************************************"
+echo
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # shellcheck source=./_common
 . "$DIR/_common"
@@ -8,18 +13,28 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 for php_version in $PHP_VERSIONS; do
   xdebug_version=
   if [ "$php_version" == "5.5" ] || [ "$php_version" == "5.6" ]; then
-    echo "Using XDebug version $xdebug_version"
+    echo "Using XDebug version: ${xdebug_version:-latest}"
     xdebug_version=-2.5.5
-  fi;
+  fi
   for php_variant in $PHP_VARIANTS; do
-    image_name="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
-    echo "Building image: $image_name"
+    if [ -z "$HAS_IMAGE_NAME" ] || [ -z "$IMAGE_NAME" ]; then
+      IMAGE_NAME="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
+      echo ">>> Set IMAGE_NAME to: $IMAGE_NAME"
+    fi
+
+    echo "Building image: $IMAGE_NAME"
     docker build \
-      -t "$image_name" \
+      -t "$IMAGE_NAME" \
       --build-arg BUILD_PHP_VERSION="$php_version" \
       --build-arg BUILD_PHP_VARIANT="$php_variant" \
       --build-arg BUILD_XDEBUG_VERSION="$xdebug_version" "$DIR/.."
   done
 done
+
+echo
+echo "************************************************"
+echo "*                End build hook                *"
+echo "************************************************"
+echo
 
 exit 0
