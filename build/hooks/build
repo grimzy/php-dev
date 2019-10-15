@@ -17,7 +17,7 @@ for php_version in $PHP_VERSIONS; do
     xdebug_version=-2.5.5
   fi
   for php_variant in $PHP_VARIANTS; do
-    if [ -z "$IMAGE_NAME" ]; then
+    if [ -z "$HAS_IMAGE_NAME" ] || [ -z "$IMAGE_NAME" ]; then
       IMAGE_NAME="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
       echo ">>> Set IMAGE_NAME to: $IMAGE_NAME"
     fi

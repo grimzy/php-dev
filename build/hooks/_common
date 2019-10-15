@@ -33,4 +33,9 @@ if [ -n "${DOCKER_TAG}" ]; then
   fi
 fi
 
+HAS_IMAGE_NAME=
+if [ -n "$IMAGE_NAME" ];then
+  HAS_IMAGE_NAME=1
+fi
+
 echo

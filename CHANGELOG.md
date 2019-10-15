@@ -8,9 +8,9 @@ This project adheres to [Semantic Versioning][semver].
 
 Refer to master branch
 
-## \[v1.1.1\] - 2019-10-13
+## \[v1.1.1\] - 2019-10-14
 
-### Split PHP builds, PHP FPM:
+### Split PHP builds, PHP FPM, Latest tag:
 - Split builds by PHP version and variant
 - Use builds Docker hooks in Makefile
 - Added `fpm` variant
