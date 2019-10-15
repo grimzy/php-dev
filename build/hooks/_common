@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 
-if [ -n "${DOCKER_TAG}" ]; then
-  echo "DOCKER_TAG: ${DOCKER_TAG}"
+echo
+echo "************************************************"
+echo " Build/Testing Environment variables"
+echo "************************************************"
+echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
+echo "SOURCE_COMMIT: ${SOURCE_COMMIT}"
+echo "COMMIT_MSG: ${COMMIT_MSG}"
+echo "DOCKER_REPO: ${DOCKER_REPO}"
+echo "DOCKERFILE_PATH: ${DOCKERFILE_PATH}"
+echo "DOCKER_TAG: ${DOCKER_TAG}"
+echo "IMAGE_NAME: ${IMAGE_NAME}"
+echo "************************************************"
+echo "Available PHP_VERSIONS: ${PHP_VERSIONS}"
+echo "Available PHP_VARIANTS: ${PHP_VARIANTS}"
+echo "************************************************"
+echo
 
+# extract version and variant from the DOCKER_TAG
+if [ -n "${DOCKER_TAG}" ]; then
   php_version="${DOCKER_TAG%%-*}"
   if [[ "${PHP_VERSIONS}" == *"$php_version"* ]]; then
     PHP_VERSIONS="$php_version"
@@ -16,3 +32,5 @@ if [ -n "${DOCKER_TAG}" ]; then
     echo ">>> Set PHP_VARIANTS to: $PHP_VARIANTS"
   fi
 fi
+
+echo
