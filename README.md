@@ -1,6 +1,6 @@
 #### PHP Development Docker Images
 
-[![Docker Cloud Automated build][docker-cloud-automated]][docker-builds] [![Docker Cloud Build Status][docker-cloud-build]][docker-builds] [![Docker Pulls][docker-pulls]][docker-overview] [![Docker Stars][docker-stars]][docker-overview] [![MicroBadger Layers][microbadger-layers]][docker-overview] [![MicroBadger Size][microbadger-image-size]][docker-overview]
+[![Docker Cloud Automated build][docker-cloud-automated]][docker-builds] [![Docker Cloud Build Status][docker-cloud-build]][docker-builds] [![Docker Pulls][docker-pulls]][docker-overview] [![Docker Stars][docker-stars]][docker-overview] [![MicroBadger Layers][microbadger-layers]][microbadger-url] [![MicroBadger Size][microbadger-image-size]][microbadger-url]
 
 >  Super simple Docker images for PHP development.
 
@@ -26,7 +26,7 @@ $ docker pull jestefane/php-dev
 **Pull a specific version:**
 
 ```sh
-$ docker pull jestefane/php-dev:7.2-cli-1.1.1
+$ docker pull jestefane/php-dev:7.2-cli
 ```
 
 Pick between the various [images provided in this repository][images].
@@ -37,28 +37,34 @@ To use the Docker images more like binaries, we're providing [Shortcuts][shortcu
 
 ## Images
 
-> Image names have the following format:
->
-> ```
-> <docker repo>:<php version>-<php variant>-<github repo version>
-> ```
+Image names have the following format:
+
+```
+<docker repo>:<php version>-<php variant>-<branch or version>
+```
+
+For convenience, the latest stable version/variant is also tagged as:
+
+```
+<docker repo>:<php version>-<php variant>
+```
 
 ### CLI
 
 **Images names**:
 
-- `jestefane/php-dev:5.5-cli-1.1.1`
-- `jestefane/php-dev:5.6-cli-1.1.1`
-- `jestefane/php-dev:7.0-cli-1.1.1`
-- `jestefane/php-dev:7.1-cli-1.1.1`
-- `jestefane/php-dev:7.2-cli-1.1.1`
+- `jestefane/php-dev:7.2-cli`
+- `jestefane/php-dev:7.1-cli`
+- `jestefane/php-dev:7.0-cli`
+- `jestefane/php-dev:5.6-cli`
+- `jestefane/php-dev:5.5-cli`
 
 **Shortcuts**: [`php-cli`][php-cli-ref], [`composer`][composer-ref]
 
 **Example**:
 
 ```bash
-$ docker run jestefane/php-dev:7.2-cli-1.1.1 hello-world.php
+$ docker run jestefane/php-dev:7.2-cli hello-world.php
 
 # or using one of the provided shortcuts
 $ php-7.2-cli hello-world.php
@@ -68,18 +74,18 @@ $ php-7.2-cli hello-world.php
 
 **Images names**:
 
-- `jestefane/php-dev:5.5-fpm-1.1.1`
-- `jestefane/php-dev:5.6-fpm-1.1.1`
-- `jestefane/php-dev:7.0-fpm-1.1.1`
-- `jestefane/php-dev:7.1-fpm-1.1.1`
-- `jestefane/php-dev:7.2-fpm-1.1.1`
+- `jestefane/php-dev:5.5-fpm`
+- `jestefane/php-dev:5.6-fpm`
+- `jestefane/php-dev:7.0-fpm`
+- `jestefane/php-dev:7.1-fpm`
+- `jestefane/php-dev:7.2-fpm`
 
 **Shortcuts**: [`php-fpm`][php-fpm-ref]
 
 **Example**:
 
 ```bash
-$ docker run jestefane/php-dev:7.2-fpm-1.1.1 hello-world.php
+$ docker run jestefane/php-dev:7.2-fpm hello-world.php
 
 # or using one of the provided shortcuts
 $ php-7.2-fpm hello-world.php
@@ -176,10 +182,12 @@ Script template: [template/composer.template][composer-template]
 | `BIN_DIR`       | Directory in your `PATH` where you would like to symlink the scripts | `/usr/local/bin`                                      | Any path on your system. Preferaby one already in your `PATH` |
 | `SCRIPTS_DIR`   | Directory where the scripts are generated (or removed). Relative to the repository's root | `scripts`                                             | Any path on your system                                      |
 
-> **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you use `\`:
+> **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you can use `\` or wrap your values in `"`:
 >
 > ```sh
 > $ make build PHP_VERSIONS=7.0\ 7.1\ 7.2 PHP_VARIANTS=cli\ fpm
+> # or
+> $ make build PHP_VERSIONS="7.0 7.1 7.2" PHP_VARIANTS="cli fpm"
 > ```
 
 ### Tasks
@@ -191,17 +199,17 @@ Locally builds all images from all possible combinations of `PHP_VERSIONS` and `
 **Command:** 
 
 ```sh
-$ make build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=]
+$ make build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=] [DOCKER_TAG=]
 ```
 
 #### Remove the Images
 
-Remove all locally cached images from all possible combinations of `PHP_VERSIONS` and `PHP_VARIANTS`.
+Remove all locally cached images from all possible combinations of `PHP_VERSIONS` and `PHP_VARIANTS`. The `DOCKER_TAG` is used to target a specific PHP version, variant.
 
 **Command:**
 
 ```sh
-$ make rm_build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_REPO=]
+$ make rm_build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=]
 ```
 
 #### Rebuild the Images
@@ -287,8 +295,9 @@ $ make rm_dangling
 [docker-stars]: https://img.shields.io/docker/stars/jestefane/php-dev "Docker Stars"
 [docker-builds]: https://hub.docker.com/r/jestefane/php-dev/builds "Docker Builds"
 [docker-overview]: https://hub.docker.com/r/jestefane/php-dev "Docker Overview"
-[microbadger-layers]: https://img.shields.io/microbadger/layers/jestefane/php-dev/7.2-cli-1.1.1 "MicroBadger Layers"
-[microbadger-image-size]: https://img.shields.io/microbadger/image-size/jestefane/php-dev/7.2-cli-1.1.1 "MicroBadger Size"
+[microbadger-layers]: https://img.shields.io/microbadger/layers/jestefane/php-dev/latest "MicroBadger Layers"
+[microbadger-image-size]: https://img.shields.io/microbadger/image-size/jestefane/php-dev/latest "MicroBadger Size"
+[microbadger-url]: https://microbadger.com/images/jestefane/php-dev "MicroBadger Estefane/php-dev"
 [shortcuts]: #shortcuts "Shortcuts"
 [install-the-shortcuts]: #install-the-shortcuts "Install the Shortcuts"
 [docker-php]: https://hub.docker.com/_/php "Official Docker PHP Images"

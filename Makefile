@@ -1,4 +1,4 @@
-
+# Build variables
 # https://docs.docker.com/docker-hub/builds/advanced/#environment-variables-for-building-and-testing
 SOURCE_BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
 DOCKER_REPO=jestefane/php-dev
@@ -10,6 +10,7 @@ PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
 # Possible PHP variants: cli, fpm
 PHP_VARIANTS=cli fpm
 
+# Script/Shortcut generation variables
 BIN_DIR=/usr/local/bin
 SCRIPTS_DIR=scripts
 
@@ -34,13 +35,14 @@ post_push:
 .PHONY: rm_build
 rm_build:
 	@{ \
-	for php_version in $(PHP_VERSIONS); do \
-		for php_variant in $(PHP_VARIANTS); do \
-			image_name=$(DOCKER_REPO):$$php_version-$$php_variant-$(SOURCE_BRANCH); \
-			echo Removing image: $$image_name; \
-			docker rmi $$image_name || true; \
-		done; \
-	done; \
+	. ./build/hooks/_common; \
+	\
+	PHP_VERSIONS="$(PHP_VERSIONS)" \
+	PHP_VARIANTS="$(PHP_VARIANTS)" \
+	SOURCE_BRANCH="$(SOURCE_BRANCH)" \
+	DOCKER_REPO="$(DOCKER_REPO)" \
+	DOCKER_TAG="$(DOCKER_TAG)" \
+	loopVersionsVariants remove_image; \
 	}
 
 .PHONY: rebuild
@@ -60,6 +62,7 @@ scripts: rm_scripts_dir
 		echo ">>> Script Composer $$php_version"; \
 		sed $$regex template/composer.template > $(SCRIPTS_DIR)/composer-$$php_version; \
 	done; \
+	chmod +x $(SCRIPTS_DIR)/*; \
 	}
 
 .PHONY: rm_scripts_dir
