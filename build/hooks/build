@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "************************************************"
-echo "*               Start build hook               *"
+echo "                  Start build"
 echo "************************************************"
 echo
 
@@ -10,30 +10,43 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=./_common
 . "$DIR/_common"
 
-for php_version in $PHP_VERSIONS; do
-  xdebug_version=
-  if [ "$php_version" == "5.5" ] || [ "$php_version" == "5.6" ]; then
-    echo "Using XDebug version: ${xdebug_version:-latest}"
-    xdebug_version=-2.5.5
-  fi
-  for php_variant in $PHP_VARIANTS; do
-    if [ -z "$HAS_IMAGE_NAME" ] || [ -z "$IMAGE_NAME" ]; then
-      IMAGE_NAME="$DOCKER_REPO:$php_version-$php_variant-$SOURCE_BRANCH"
-      echo ">>> Set IMAGE_NAME to: $IMAGE_NAME"
-    fi
+echoEnvVars
 
-    echo "Building image: $IMAGE_NAME"
-    docker build \
-      -t "$IMAGE_NAME" \
-      --build-arg BUILD_PHP_VERSION="$php_version" \
-      --build-arg BUILD_PHP_VARIANT="$php_variant" \
-      --build-arg BUILD_XDEBUG_VERSION="$xdebug_version" "$DIR/.."
-  done
-done
+function buildImage() {
+  local php_version=$1
+  local php_variant=$2
+  local xdebug_version
+  local image_name
+
+  checkForVersionVariant "$php_version" "$php_variant"
+
+  xdebug_version=$(getXdebugVersion "$php_version")
+  image_name=$(getImageName "$php_version" "$php_variant")
+
+  echo "Building image: $image_name"
+  docker build \
+    -t "$image_name" \
+    --build-arg BUILD_PHP_VERSION="$php_version" \
+    --build-arg BUILD_PHP_VARIANT="$php_variant" \
+    --build-arg BUILD_XDEBUG_VERSION="$xdebug_version" "$DIR/.."
+}
+
+function getXdebugVersion() {
+  local php_version=$1
+
+  local php_versions_xdebug="5.5 5.6"
+
+  local version_prefix=-
+  local version_xdebug="2.5.5"
+
+  [[ "${php_versions_xdebug}" == *"$php_version"* ]] && echo "$version_prefix$version_xdebug"
+}
+
+loopVersionsVariants buildImage
 
 echo
 echo "************************************************"
-echo "*                End build hook                *"
+echo "                   End build                    "
 echo "************************************************"
 echo
 

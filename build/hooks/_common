@@ -1,36 +1,96 @@
 #!/usr/bin/env bash
 
-echo
-echo "************************************************"
-echo " Build/Testing Environment variables"
-echo "************************************************"
-echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
-echo "SOURCE_COMMIT: ${SOURCE_COMMIT}"
-echo "COMMIT_MSG: ${COMMIT_MSG}"
-echo "DOCKER_REPO: ${DOCKER_REPO}"
-echo "DOCKERFILE_PATH: ${DOCKERFILE_PATH}"
-echo "DOCKER_TAG: ${DOCKER_TAG}"
-echo "IMAGE_NAME: ${IMAGE_NAME}"
-echo "************************************************"
-echo "Available PHP_VERSIONS: ${PHP_VERSIONS}"
-echo "Available PHP_VARIANTS: ${PHP_VARIANTS}"
-echo "************************************************"
-echo
+function echoEnvVars() {
+  echo
+  echo "************************************************"
+  echo " Build/Testing Environment variables"
+  echo "************************************************"
+  echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
+  echo "SOURCE_COMMIT: ${SOURCE_COMMIT}"
+  echo "COMMIT_MSG: ${COMMIT_MSG}"
+  echo "DOCKER_REPO: ${DOCKER_REPO}"
+  echo "DOCKERFILE_PATH: ${DOCKERFILE_PATH}"
+  echo "DOCKER_TAG: ${DOCKER_TAG}"
+  echo "IMAGE_NAME: ${IMAGE_NAME}"
+  echo "************************************************"
+  echo "Available PHP_VERSIONS: ${PHP_VERSIONS}"
+  echo "Available PHP_VARIANTS: ${PHP_VARIANTS}"
+  echo "************************************************"
+  echo
+}
 
-# extract version and variant from the DOCKER_TAG
-if [ -n "${DOCKER_TAG}" ]; then
-  php_version="${DOCKER_TAG%%-*}"
-  if [[ "${PHP_VERSIONS}" == *"$php_version"* ]]; then
-    PHP_VERSIONS="$php_version"
-    echo ">>> Set PHP_VERSIONS to: $PHP_VERSIONS"
+# Loops
+function loopVersionsVariants() {
+  echoEnvVars
+
+  if [ -n "${DOCKER_TAG}" ]; then
+    php_version=$(getVersionFromDockerTag)
+    php_variant=$(getVariantFromDockerTag)
+
+    checkForVersionVariant "$php_version" "$php_variant"
+    $1 "$php_version" "$php_variant"
+  else
+    for php_version in $PHP_VERSIONS; do
+      for php_variant in $PHP_VARIANTS; do
+        checkForVersionVariant "$php_version" "$php_variant"
+        $1 "$php_version" "$php_variant"
+      done
+    done
   fi
+}
 
-  php_variant="${DOCKER_TAG#*-}"
-  php_variant=${php_variant%%-*}
-  if [[ "${PHP_VARIANTS}" == *"$php_variant"* ]]; then
-    PHP_VARIANTS="$php_variant"
-    echo ">>> Set PHP_VARIANTS to: $PHP_VARIANTS"
+# extract version from $DOCKER_TAG
+function getVersionFromDockerTag() {
+  if [ -n "$DOCKER_TAG" ]; then
+    local php_version="${DOCKER_TAG%%-*}"
+    if [[ "$PHP_VERSIONS" == *"$php_version"* ]]; then
+      echo "$php_version"
+    fi
   fi
-fi
+}
 
-echo
+# extract variant from $DOCKER_TAG
+function getVariantFromDockerTag() {
+  if [ -n "${DOCKER_TAG}" ]; then
+    local trimed_left="${DOCKER_TAG#*-}"
+    local php_variant=${trimed_left%%-*}
+    if [[ "${PHP_VARIANTS}" == *"$php_variant"* ]]; then
+      echo "$php_variant"
+    fi
+  fi
+}
+
+# returns the IMAGE_NAME or generate one
+function getImageName() {
+  local image_name="$IMAGE_NAME"
+  if [ -z "$image_name" ]; then
+    local php_version=$1
+    local php_variant=$2
+    local image_name="$DOCKER_REPO:$php_version-$php_variant"
+    if [ -n "$SOURCE_BRANCH" ]; then
+      image_name="$image_name-$SOURCE_BRANCH"
+    fi
+  fi
+  echo "$image_name"
+}
+
+# exits the script if either or are missing
+function checkForVersionVariant() {
+  local php_version=$1
+  local php_variant=$2
+
+  if [ -z "$php_version" ] || [ -z "$php_variant" ]; then
+    echo "Missing php_version or php_variant"
+    exit 1
+  fi
+}
+
+# Remove loally built images
+function remove_image() {
+  local php_version=$1
+  local php_variant=$2
+
+  image_name=$(getImageName "$php_version" "$php_variant")
+  echo "Removing image: $image_name"
+  docker rmi "$image_name" || true
+}
