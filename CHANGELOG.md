@@ -14,6 +14,7 @@ Refer to master branch
 - Refactored Docker hook scripts into reusable functions
 - Fix issue with short tags not being pushed
 - Fixed `make rm_build`
+- Removed source branch image name in templates
 
 ## \[v1.1.1\] - 2019-10-14
 
