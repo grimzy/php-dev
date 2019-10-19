@@ -176,10 +176,12 @@ Script template: [template/composer.template][composer-template]
 | `BIN_DIR`       | Directory in your `PATH` where you would like to symlink the scripts | `/usr/local/bin`                                      | Any path on your system. Preferaby one already in your `PATH` |
 | `SCRIPTS_DIR`   | Directory where the scripts are generated (or removed). Relative to the repository's root | `scripts`                                             | Any path on your system                                      |
 
-> **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you use `\`:
+> **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you can use `\` or wrap your values in `"`:
 >
 > ```sh
 > $ make build PHP_VERSIONS=7.0\ 7.1\ 7.2 PHP_VARIANTS=cli\ fpm
+> # or
+> $ make build PHP_VERSIONS="7.0 7.1 7.2" PHP_VARIANTS="cli fpm"
 > ```
 
 ### Tasks
@@ -191,17 +193,17 @@ Locally builds all images from all possible combinations of `PHP_VERSIONS` and `
 **Command:** 
 
 ```sh
-$ make build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=]
+$ make build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=] [DOCKER_TAG=]
 ```
 
 #### Remove the Images
 
-Remove all locally cached images from all possible combinations of `PHP_VERSIONS` and `PHP_VARIANTS`.
+Remove all locally cached images from all possible combinations of `PHP_VERSIONS` and `PHP_VARIANTS`. The `DOCKER_TAG` is used to target a specific PHP version, variant.
 
 **Command:**
 
 ```sh
-$ make rm_build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_REPO=]
+$ make rm_build [PHP_VERSIONS=] [PHP_VARIANTS=] [SOURCE_BRANCH=] [DOCKER_TAG=] [DOCKER_REPO=]
 ```
 
 #### Rebuild the Images
