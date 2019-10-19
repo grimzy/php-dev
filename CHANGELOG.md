@@ -8,6 +8,12 @@ This project adheres to [Semantic Versioning][semver].
 
 Refer to master branch
 
+## \[v1.1.3\] - 2019-10-19
+
+### PHP version 7.3:
+- Added PHP version 7.3
+- Set new latest default to PHP 7.3
+
 ## \[v1.1.2\] - 2019-10-19
 
 ### Refactor Hooks into Functions:

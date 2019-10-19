@@ -47,7 +47,7 @@ function isRelease() {
 }
 
 function isLatest() {
-  local latest_version=7.2
+  local latest_version=7.3
   local latest_variant=cli
   [ "$php_version" == "$latest_version" ] && [ "$php_variant" == "$latest_variant" ]
 }
