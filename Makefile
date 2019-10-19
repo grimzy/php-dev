@@ -4,8 +4,8 @@ SOURCE_BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
 DOCKER_REPO=jestefane/php-dev
 DOCKER_TAG=
 
-# Possible PHP versions: 5.5, 5.6, 7.0, 7.1, 7.2
-PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2
+# Possible PHP versions: 5.5, 5.6, 7.0, 7.1, 7.2, 7.3
+PHP_VERSIONS=5.5 5.6 7.0 7.1 7.2 7.3
 
 # Possible PHP variants: cli, fpm
 PHP_VARIANTS=cli fpm

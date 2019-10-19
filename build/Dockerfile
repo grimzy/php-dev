@@ -1,5 +1,5 @@
 # PHP version and variant to build (defaults are latest)
-ARG BUILD_PHP_VERSION=7.2
+ARG BUILD_PHP_VERSION=7.3
 ARG BUILD_PHP_VARIANT=cli
 
 FROM php:$BUILD_PHP_VERSION-$BUILD_PHP_VARIANT

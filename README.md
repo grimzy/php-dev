@@ -4,7 +4,7 @@
 
 >  Super simple Docker images for PHP development.
 
-**PHP Versions:** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`
+**PHP Versions:** `5.5`, `5.6`, `7.0`, `7.1`, `7.2`, `7.3`
 
 **PHP Variants:** `cli`, `fpm`
 
@@ -26,7 +26,7 @@ $ docker pull jestefane/php-dev
 **Pull a specific version:**
 
 ```sh
-$ docker pull jestefane/php-dev:7.2-cli
+$ docker pull jestefane/php-dev:7.3-cli
 ```
 
 Pick between the various [images provided in this repository][images].
@@ -53,6 +53,7 @@ For convenience, the latest stable version/variant is also tagged as:
 
 **Images names**:
 
+- `jestefane/php-dev:7.3-cli`
 - `jestefane/php-dev:7.2-cli`
 - `jestefane/php-dev:7.1-cli`
 - `jestefane/php-dev:7.0-cli`
@@ -74,18 +75,19 @@ $ php-7.2-cli hello-world.php
 
 **Images names**:
 
-- `jestefane/php-dev:5.5-fpm`
-- `jestefane/php-dev:5.6-fpm`
-- `jestefane/php-dev:7.0-fpm`
-- `jestefane/php-dev:7.1-fpm`
+- `jestefane/php-dev:7.3-fpm`
 - `jestefane/php-dev:7.2-fpm`
+- `jestefane/php-dev:7.1-fpm`
+- `jestefane/php-dev:7.0-fpm`
+- `jestefane/php-dev:5.6-fpm`
+- `jestefane/php-dev:5.5-fpm`
 
 **Shortcuts**: [`php-fpm`][php-fpm-ref]
 
 **Example**:
 
 ```bash
-$ docker run jestefane/php-dev:7.2-fpm hello-world.php
+$ docker run jestefane/php-dev:7.3-fpm hello-world.php
 
 # or using one of the provided shortcuts
 $ php-7.2-fpm hello-world.php
@@ -148,7 +150,7 @@ For more info on the `scripts` task [Makefile command reference][scripts-make].
 
 Images: [All respective versions of the PHP CLI variant][cli]
 
-Shortcuts: `php-5.5-cli`, `php-5.6-cli`, `php-7.0-cli`, `php-7.1-cli`, `php-7.2-cli`
+Shortcuts: `php-5.5-cli`, `php-5.6-cli`, `php-7.0-cli`, `php-7.1-cli`, `php-7.2-cli`, `php-7.3-cli`
 
 Script template: [template/php.template][php-template]
 
@@ -156,7 +158,7 @@ Script template: [template/php.template][php-template]
 
 Images: [All respective versions of the PHP FPM variant][fpm]
 
-Shortcuts: `php-5.5-fpm`, `php-5.6-fpm`, `php-7.0-fpm`, `php-7.1-fpm`, `php-7.2-fpm`
+Shortcuts: `php-5.5-fpm`, `php-5.6-fpm`, `php-7.0-fpm`, `php-7.1-fpm`, `php-7.2-fpm`, `php-7.3-cli`
 
 Script template: [template/php.template][php-template]
 
@@ -164,7 +166,7 @@ Script template: [template/php.template][php-template]
 
 Images: [All respective versions of `jestefane/php-dev` images][images] ([Composer][composer] is installed on every image)
 
-Shortcuts: `composer-5.5`, `composer-5.6`, `composer-7.0`, `composer-7.1`, `composer-7.2`
+Shortcuts: `composer-5.5`, `composer-5.6`, `composer-7.0`, `composer-7.1`, `composer-7.2`, `composer-7.3`
 
 Script template: [template/composer.template][composer-template]
 
@@ -177,7 +179,7 @@ Script template: [template/composer.template][composer-template]
 | `SOURCE_BRANCH` | Appended to the image name.<br />[Docker Cloud variable][docker-cloud-variable] | Current Git branch: `git rev-parse --abbrev-ref HEAD` | Any `string` value                                           |
 | `DOCKER_REPO`   | The Dockerhub repository to perform the tasks against<br />[Docker Cloud variable][docker-cloud-variable] | `jestefane/php-dev`                                   | A Dockerhub repository                                       |
 | `DOCKER_TAG`    | A combinaison of one PHP version and one PHP variant to perform a task only one image (for example `7.1-cli`)<br />[Docker Cloud variable][docker-cloud-variable] | Empty                                                 | Any `PHP_VERSION`-`PHP_VARIANT` combinaison                  |
-| `PHP_VERSIONS`  | Space separated list of PHP versions to perform a task on.   | `5.5 5.6 7.0 7.1 7.2`                                 | Any combination from `5.5`, `5.6`, `7.0`, `7.1`, `7.2`       |
+| `PHP_VERSIONS`  | Space separated list of PHP versions to perform a task on.   | `5.5 5.6 7.0 7.1 7.2 7.3`                             | Any combination from `5.5`, `5.6`, `7.0`, `7.1`, `7.2`, `7.3` |
 | `PHP_VARIANTS`  | Space separated list of Docker build variants to perform a task on | `cli fpm`                                             | `cli`, `fpm`                                                 |
 | `BIN_DIR`       | Directory in your `PATH` where you would like to symlink the scripts | `/usr/local/bin`                                      | Any path on your system. Preferaby one already in your `PATH` |
 | `SCRIPTS_DIR`   | Directory where the scripts are generated (or removed). Relative to the repository's root | `scripts`                                             | Any path on your system                                      |
@@ -185,9 +187,9 @@ Script template: [template/composer.template][composer-template]
 > **Note**: When overriding space separated values from the CLI, you have to escape spaces. For example in `bash` you can use `\` or wrap your values in `"`:
 >
 > ```sh
-> $ make build PHP_VERSIONS=7.0\ 7.1\ 7.2 PHP_VARIANTS=cli\ fpm
+> $ make build PHP_VERSIONS=7.0\ 7.1\ 7.2\ 7.3 PHP_VARIANTS=cli\ fpm
 > # or
-> $ make build PHP_VERSIONS="7.0 7.1 7.2" PHP_VARIANTS="cli fpm"
+> $ make build PHP_VERSIONS="7.0 7.1 7.2 7.3" PHP_VARIANTS="cli fpm"
 > ```
 
 ### Tasks
